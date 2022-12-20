@@ -18,14 +18,8 @@ coverage/
 reports/
 junit.xml
 
-# Node modules
-node_modules/
-
 # Mac OS
 .DS_Store
 
 # Intellij Configuration Files
 .idea/
-
-# Volta binaries (when using direnv/.envrc)
-.volta
