@@ -1,6 +1,3 @@
-# Ignore the compiled output.
-dist/
-
 # TypeScript incremental compilation cache
 *.tsbuildinfo
 

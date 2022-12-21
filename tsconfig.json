@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "target": "ESNext",
+    "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -10,6 +10,7 @@
     "declaration": true,
     "declarationMap": true,
     "removeComments": true,
+    "skipLibCheck": true,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -18,13 +19,7 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
-    "baseUrl": ".",
-    "paths": {
-      "*": [
-        "types/*"
-      ]
-    }
+    "importsNotUsedAsValues": "error"
   },
   "include": [
     "src/**/*"
