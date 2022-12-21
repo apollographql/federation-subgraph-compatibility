@@ -23,5 +23,5 @@ inputs:
     description: 'Github Token for submitting PR comments'
     required: false
 runs:
-  using: 'node18'
+  using: 'node16'
   main: 'dist/index.js'
