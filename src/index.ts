@@ -1,12 +1,13 @@
 import debug from 'debug';
 import { create } from '@actions/artifact';
-import { getBooleanInput, getInput } from '@actions/core';
+import { getBooleanInput, getInput, setFailed } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 import {
   compatibilityTest,
   DockerConfig,
 } from '@apollo/federation-subgraph-compatibility-tests';
 import { readFileSync } from 'fs';
+import { resolve } from 'path';
 
 async function main(): Promise<void> {
   const debugMode: boolean = getBooleanInput('debug');
@@ -23,13 +24,32 @@ async function main(): Promise<void> {
     port: getInput('port') ?? '4001',
     format: 'markdown',
   };
-  await compatibilityTest(runtimeConfig);
+  try {
+    await compatibilityTest(runtimeConfig);
 
-  // upload artifact
+    // add empty log to separate logged results
+    console.log('');
+    await uploadCompatibilityResultsArtifact();
+    await commentOnThePr();
+  } catch (error) {
+    let message;
+    if (error instanceof Error) {
+      message = error.message;
+    } else {
+      message = String(error);
+    }
+    setFailed(message);
+  }
+}
+
+async function uploadCompatibilityResultsArtifact() {
+  logWithTimestamp(
+    '***********************\nuploading compatibility results workflow artifact\n***********************',
+  );
   const artifactClient = create();
   const artifactName = 'compatibility-results';
   const files = ['results.md'];
-  const rootDirectory = __dirname;
+  const rootDirectory = resolve(__dirname, '..');
   const options = {
     continueOnError: false,
   };
@@ -39,23 +59,68 @@ async function main(): Promise<void> {
     rootDirectory,
     options,
   );
+}
 
-  // comment on PR
+async function commentOnThePr() {
   const { pull_request } = context.payload;
   if (pull_request) {
     const token: string = getInput('token');
+    logWithTimestamp(
+      '***********************\nattempting to comment on the PR\n***********************',
+    );
     if (token) {
       const octokit = getOctokit(token);
-      const bodyContents: string = readFileSync('results.md', 'utf-8');
-      await octokit.rest.issues.createComment({
+      // find latest comment
+      const comments = await octokit.rest.issues.listComments({
         ...context.repo,
         issue_number: pull_request.number,
-        body: bodyContents,
       });
+      let lastCommentId: number | null = null;
+      if (comments.status == 200 && comments.data) {
+        const actionComment = comments.data.filter((element) =>
+          element.body?.startsWith(
+            '## Apollo Federation Subgraph Compatibility Results',
+          ),
+        );
+        if (actionComment.length > 0) {
+          lastCommentId = actionComment[0].id;
+        }
+      }
+
+      const compatibilityResults: string = readFileSync('results.md', 'utf-8');
+      const commentBody = `## Apollo Federation Subgraph Compatibility Results\n
+${compatibilityResults}\n
+Learn more:
+* [Apollo Federation Subgraph Specification](https://www.apollographql.com/docs/federation/subgraph-spec/)
+* [Compatibility Tests](https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/COMPATIBILITY.md)
+`;
+
+      if (lastCommentId) {
+        await octokit.rest.issues.updateComment({
+          ...context.repo,
+          comment_id: lastCommentId,
+          body: commentBody,
+        });
+        logWithTimestamp('comment updated');
+      } else {
+        await octokit.rest.issues.createComment({
+          ...context.repo,
+          issue_number: pull_request.number,
+          body: commentBody,
+        });
+        logWithTimestamp('comment posted');
+      }
     } else {
-      console.warn('Github Token not provided');
+      console.warn(
+        new Date().toJSON(),
+        'unable to post comment - Github Token was not provided',
+      );
     }
   }
+}
+
+function logWithTimestamp(message: string) {
+  console.log(new Date().toJSON(), message);
 }
 
 main().catch((error) => {
