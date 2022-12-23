@@ -49,7 +49,7 @@ async function uploadCompatibilityResultsArtifact() {
   const artifactClient = create();
   const artifactName = 'compatibility-results';
   const files = ['results.md'];
-  const rootDirectory = resolve(__dirname, '..');
+  const rootDirectory = resolve(process.cwd());
   const options = {
     continueOnError: false,
   };
