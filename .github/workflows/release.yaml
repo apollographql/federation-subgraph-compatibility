@@ -1,0 +1,71 @@
+name: Release
+run-name: release ${{ inputs.version }} (triggered by @${{ github.actor }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: New semantic version to release, format v{major}.{minor}.{patch} (e.g. v1.2.3)
+        type: string
+        required: true
+
+jobs:
+  release-action:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Setup Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - name: Verify sem version
+        run: |
+          semVerRegEx='^v([0-9]+\.){2}([0-9]+)$'
+          if [[ $VERSION =~ $semVerRegEx ]]; then
+            echo "Specified valid semver $VERSION"
+          else
+            echo "Invalid semver $VERSION"
+            exit 1
+          fi
+        env:
+          VERSION: ${{ inputs.version }}
+      - name: Checkout new branch
+        run: |
+          git checkout -b ${{ inputs.version }}
+          mv .gitignore_release .gitignore
+      - name: Install dependencies and build
+        run: npm install
+      - name: Commit changes
+        run: |
+          set -x
+          git config user.name 'github-actions'
+          git config user.email 'github-actions@users.noreply.github.com'
+          git add .
+          git commit -m 'release ${{ inputs.version }}' --quiet
+
+          echo "pushing changes upstream"
+          git push origin $VERSION
+
+          VERSION_MAJOR="${VERSION%%\.*}"
+          echo "tagging release ${VERSION}"
+          git tag ${VERSION}
+          echo "tagging release major ${VERSION_MAJOR}"
+          git tag -f ${VERSION_MAJOR}
+          echo "pushing tags upstream"
+          git push -f origin --tags
+        env:
+          VERSION: ${{ inputs.version }}
+      - name: Release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: '${{ inputs.version }}',
+              generate_release_notes: true
+            })
