@@ -1,6 +1,6 @@
 import debug from 'debug';
 import { create } from '@actions/artifact';
-import { getBooleanInput, getInput, setFailed } from '@actions/core';
+import { getBooleanInput, getInput, setFailed, summary } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 import {
   compatibilityTest,
@@ -29,8 +29,13 @@ async function main(): Promise<void> {
 
     // add empty log to separate logged results
     console.log('');
-    await uploadCompatibilityResultsArtifact();
-    await commentOnThePr();
+    const results = readFileSync('results.md', 'utf-8');
+
+    const artifactPromise = uploadCompatibilityResultsArtifact();
+    const jobSummaryPromise = commentOnJobSummary(results);
+    const commentPromise = commentOnThePr(results);
+
+    await Promise.all([artifactPromise, jobSummaryPromise, commentPromise]);
   } catch (error) {
     let message;
     if (error instanceof Error) {
@@ -61,7 +66,13 @@ async function uploadCompatibilityResultsArtifact() {
   );
 }
 
-async function commentOnThePr() {
+async function commentOnJobSummary(results: string) {
+  await summary.addHeading('Apollo Federation Subgraph Compatibility Results')
+    .addCodeBlock(results)
+    .write();
+}
+
+async function commentOnThePr(results: string) {
   const { pull_request } = context.payload;
   if (pull_request) {
     const token: string = getInput('token');
@@ -87,9 +98,8 @@ async function commentOnThePr() {
         }
       }
 
-      const compatibilityResults: string = readFileSync('results.md', 'utf-8');
       const commentBody = `## Apollo Federation Subgraph Compatibility Results\n
-${compatibilityResults}\n
+${results}\n
 Learn more:
 * [Apollo Federation Subgraph Specification](https://www.apollographql.com/docs/federation/subgraph-spec/)
 * [Compatibility Tests](https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/COMPATIBILITY.md)
