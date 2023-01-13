@@ -22,6 +22,14 @@ inputs:
   token:
     description: 'Github Token for submitting PR comments'
     required: false
+  failOnWarning:
+    description: 'Boolean flag to indicate whether any failing test should fail the script'
+    required: false
+    default: false
+  failOnRequired:
+    description: 'Boolean flag to indicate whether any failing required functionality test should fail the script'
+    required: false
+    default: false
 runs:
   using: 'node16'
   main: 'dist/index.js'

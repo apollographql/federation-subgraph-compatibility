@@ -23,9 +23,11 @@ async function main(): Promise<void> {
     path: getInput('path') ?? '',
     port: getInput('port') ?? '4001',
     format: 'markdown',
+    failOnRequired: getBooleanInput('failOnRequired') ?? false,
+    failOnWarning: getBooleanInput('failOnWarning') ?? false,
   };
   try {
-    await compatibilityTest(runtimeConfig);
+    const successful = await compatibilityTest(runtimeConfig);
 
     // add empty log to separate logged results
     console.log('');
@@ -36,6 +38,9 @@ async function main(): Promise<void> {
     const commentPromise = commentOnThePr(results);
 
     await Promise.all([artifactPromise, jobSummaryPromise, commentPromise]);
+    if (!successful) {
+      setFailed('Some compatibility tests did not complete successfully.');
+    }
   } catch (error) {
     let message;
     if (error instanceof Error) {
@@ -67,7 +72,8 @@ async function uploadCompatibilityResultsArtifact() {
 }
 
 async function commentOnJobSummary(results: string) {
-  await summary.addHeading('Apollo Federation Subgraph Compatibility Results')
+  await summary
+    .addHeading('Apollo Federation Subgraph Compatibility Results')
     .addCodeBlock(results)
     .write();
 }
