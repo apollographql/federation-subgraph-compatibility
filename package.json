@@ -31,7 +31,7 @@
     "@actions/artifact": "^1.1.0",
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
-    "@apollo/federation-subgraph-compatibility-tests": "^1.0.0",
+    "@apollo/federation-subgraph-compatibility-tests": "^1.0.1",
     "debug": "^4.3.4"
   },
   "devDependencies": {
