@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "@types/debug": "4.1.7",
-    "@types/node": "16.18.11",
-    "@typescript-eslint/eslint-plugin": "5.51.0",
-    "@typescript-eslint/parser": "5.51.0",
+    "@types/node": "16.18.12",
+    "@typescript-eslint/eslint-plugin": "5.52.0",
+    "@typescript-eslint/parser": "5.52.0",
     "eslint": "^8.34.0",
     "eslint-plugin-import": "^2.27.5",
     "prettier": "^2.8.4",
