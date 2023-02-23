@@ -10,6 +10,13 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
 async function main(): Promise<void> {
+  const workingDirectory = getInput('workingDirectory');
+  if (workingDirectory) {
+    console.log(`changing current working directory to ${workingDirectory}`);
+    const newWorkingDirectory = resolve(process.cwd(), workingDirectory);
+    process.chdir(newWorkingDirectory);
+  }
+
   const debugMode: boolean = getBooleanInput('debug');
   if (debugMode) {
     console.log('setting debug setting');
@@ -59,14 +66,14 @@ async function uploadCompatibilityResultsArtifact() {
   const artifactClient = create();
   const artifactName = 'compatibility-results';
   const files = ['results.md'];
-  const rootDirectory = resolve(process.cwd());
+  const workingDirectory = resolve(process.cwd());
   const options = {
     continueOnError: false,
   };
   await artifactClient.uploadArtifact(
     artifactName,
     files,
-    rootDirectory,
+    workingDirectory,
     options,
   );
 }
