@@ -30,6 +30,9 @@ inputs:
     description: 'Boolean flag to indicate whether any failing required functionality test should fail the script'
     required: false
     default: false
+  workingDirectory:
+    description: 'Working directory to run the action from. Should be relative from the root of the project.'
+    required: false
 runs:
   using: 'node16'
   main: 'dist/index.js'
