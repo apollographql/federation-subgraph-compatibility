@@ -30,6 +30,8 @@ If action is used on PR workflows, compatibility results can be posted on the PR
     failOnWarning: false
     # Boolean flag to indicate whether any failing required functionality test should fail the script
     failOnRequired: false
+    # Working directory to run the action from. Should be relative from the root of the project.
+    workingDirectory: ''
 ```
 
 ## Known Limitations
