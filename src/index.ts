@@ -12,15 +12,15 @@ import { resolve } from 'path';
 async function main(): Promise<void> {
   const workingDirectory = getInput('workingDirectory');
   if (workingDirectory) {
-    console.log(`changing current working directory to ${workingDirectory}`);
     const newWorkingDirectory = resolve(process.cwd(), workingDirectory);
     process.chdir(newWorkingDirectory);
   }
 
   const debugMode: boolean = getBooleanInput('debug');
   if (debugMode) {
-    console.log('setting debug setting');
-    debug.enable('debug,pm2,docker,rover,test');
+    debug.enable('info,pm2,docker,rover,test');
+  } else {
+    debug.enable('info');
   }
 
   const runtimeConfig: DockerConfig = {
