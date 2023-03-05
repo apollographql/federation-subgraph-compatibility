@@ -20,7 +20,3 @@ junit.xml
 
 # Intellij Configuration Files
 .idea/
-
-# ignore build items
-dist
-node_modules
