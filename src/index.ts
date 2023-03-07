@@ -1,6 +1,6 @@
 import debug from 'debug';
 import { create } from '@actions/artifact';
-import { getBooleanInput, getInput, setFailed, summary } from '@actions/core';
+import { getBooleanInput, getInput, setFailed, summary, warning } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 import {
   compatibilityTest,
@@ -35,9 +35,22 @@ async function main(): Promise<void> {
   };
   try {
     const successful = await compatibilityTest(runtimeConfig);
+    if (!successful) {
+      setFailed('Some compatibility tests did not complete successfully.');
+    }
+  } catch (e) {
+    let message;
+    if (e instanceof Error) {
+      message = e.message;
+    } else {
+      message = String(e);
+    }
+    setFailed(message);
+  }
 
-    // add empty log to separate logged results
-    console.log('');
+  // add empty log to separate logged results
+  console.log('');
+  try {
     const results = readFileSync('results.md', 'utf-8');
 
     const artifactPromise = uploadCompatibilityResultsArtifact();
@@ -45,17 +58,14 @@ async function main(): Promise<void> {
     const commentPromise = commentOnThePr(results);
 
     await Promise.all([artifactPromise, jobSummaryPromise, commentPromise]);
-    if (!successful) {
-      setFailed('Some compatibility tests did not complete successfully.');
-    }
-  } catch (error) {
-    let message;
-    if (error instanceof Error) {
-      message = error.message;
+  } catch (e) {
+    let message: string | Error;
+    if (e instanceof Error) {
+      message = e;
     } else {
-      message = String(error);
+      message = String(e);
     }
-    setFailed(message);
+    warning(message);
   }
 }
 
@@ -68,7 +78,7 @@ async function uploadCompatibilityResultsArtifact() {
   const files = ['results.md'];
   const workingDirectory = resolve(process.cwd());
   const options = {
-    continueOnError: false,
+    continueOnError: true,
   };
   await artifactClient.uploadArtifact(
     artifactName,
@@ -79,6 +89,9 @@ async function uploadCompatibilityResultsArtifact() {
 }
 
 async function commentOnJobSummary(results: string) {
+  logWithTimestamp(
+    '***********************\ncreating job summary\n***********************',
+  );
   await summary
     .addHeading('Apollo Federation Subgraph Compatibility Results')
     .addCodeBlock(results)
