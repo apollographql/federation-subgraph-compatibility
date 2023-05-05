@@ -18,8 +18,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error"
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "src/**/*"
