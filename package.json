@@ -1,6 +1,6 @@
 {
   "name": "@apollo/apollo-federation-subgraph-compatibility-action",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Github Action for checking a subgraph's compatibility with a federated gateway",
   "main": "dist/index.js",
   "author": "Apollo <packages@apollographql.com>",

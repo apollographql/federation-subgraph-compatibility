@@ -12,7 +12,7 @@ If action is used on PR workflows, compatibility results can be posted on the PR
 ## Usage
 
 ```yaml
-- uses: apollographql/federation-subgraph-compatibility@v1
+- uses: apollographql/federation-subgraph-compatibility@v2
   with:
     # [Required] Docker Compose file to start up the subgraph
     compose: 'path/to/docker-compose.yaml'
