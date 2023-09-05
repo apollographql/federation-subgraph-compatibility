@@ -34,7 +34,7 @@ inputs:
     description: 'Working directory to run the action from. Should be relative from the root of the project.'
     required: false
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
 branding:
   color: 'blue'
