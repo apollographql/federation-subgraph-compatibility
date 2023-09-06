@@ -38,7 +38,7 @@ If action is used on PR workflows, compatibility results can be posted on the PR
 
 ### Default GITHUB_TOKEN doesn't work with forks
 
-Due to the security reasons, maximum `GITHUB_TOKEN` permission is set to **read** for PRs from public forked repositories ([source](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token)). If you want to run this action against PRs from forked repositories you will need to use Personal Access Token that was generated with appropriate permissions. See [Github documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) for more details.
+Due to the security reasons, maximum `GITHUB_TOKEN` permission is set to **read** for PRs from public forked repositories ([source](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token)). If you want to run this action against PRs from forked repositories you will need to use a workaround with multiple workflows (see [Github security blog](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/) for details) or provide a Personal Access Token that was generated with appropriate permissions (see [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) documentation for details).
 
 ## Release
 
