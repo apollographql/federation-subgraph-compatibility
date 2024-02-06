@@ -1,5 +1,5 @@
 import debug from 'debug';
-import { create } from '@actions/artifact';
+import { DefaultArtifactClient } from '@actions/artifact';
 import { getBooleanInput, getInput, setFailed, summary, warning } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 import {
@@ -73,18 +73,14 @@ async function uploadCompatibilityResultsArtifact() {
   logWithTimestamp(
     '***********************\nuploading compatibility results workflow artifact\n***********************',
   );
-  const artifactClient = create();
+  const artifactClient = new DefaultArtifactClient();
   const artifactName = 'compatibility-results';
   const files = ['results.md'];
   const workingDirectory = resolve(process.cwd());
-  const options = {
-    continueOnError: true,
-  };
   await artifactClient.uploadArtifact(
     artifactName,
     files,
-    workingDirectory,
-    options,
+    workingDirectory
   );
 }
 
