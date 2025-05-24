@@ -40,14 +40,14 @@
   },
   "devDependencies": {
     "@types/debug": "4.1.12",
-    "@types/node": "18.19.14",
+    "@types/node": "18.19.103",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
-    "eslint": "8.56.0",
-    "eslint-plugin-import": "2.29.1",
-    "prettier": "3.2.5",
+    "eslint": "8.57.1",
+    "eslint-plugin-import": "2.31.0",
+    "prettier": "3.5.3",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.8.3"
   },
   "overrides": {
     "braces": "^3.0.3",
