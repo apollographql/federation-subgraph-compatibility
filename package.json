@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@actions/artifact": "^2.3.2",
-    "@actions/core": "^1.10.0",
+    "@actions/core": "^3.0.0",
     "@actions/github": "^6.0.0",
     "@apollo/federation-subgraph-compatibility-tests": "^2.2.2",
     "debug": "^4.3.4"
