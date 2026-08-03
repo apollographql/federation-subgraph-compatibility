@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "Github Action for checking a subgraph's compatibility with a federated gateway",
   "main": "dist/index.js",
+  "type": "module",
   "author": "Apollo <packages@apollographql.com>",
   "license": "MIT",
   "repository": {
@@ -21,8 +22,8 @@
     "url": "https://github.com/apollographql/apollo-federation-subgraph-compatibility-action/issues"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.6.0"
+    "node": ">=24.0.0",
+    "npm": ">=11.0.0"
   },
   "scripts": {
     "build": "tsc --build tsconfig.json",
@@ -32,22 +33,22 @@
     "postinstall": "npm run build"
   },
   "dependencies": {
-    "@actions/artifact": "^2.3.2",
-    "@actions/core": "^1.10.0",
-    "@actions/github": "^6.0.0",
-    "@apollo/federation-subgraph-compatibility-tests": "^2.2.2",
-    "debug": "^4.3.4"
+    "@actions/artifact": "^6.2.1",
+    "@actions/core": "^3.0.1",
+    "@actions/github": "^9.1.1",
+    "@apollo/federation-subgraph-compatibility-tests": "^3.0.0",
+    "debug": "^4.4.3"
   },
   "devDependencies": {
-    "@types/debug": "4.1.12",
-    "@types/node": "18.19.14",
-    "@typescript-eslint/eslint-plugin": "6.21.0",
-    "@typescript-eslint/parser": "6.21.0",
-    "eslint": "8.56.0",
-    "eslint-plugin-import": "2.29.1",
-    "prettier": "3.2.5",
+    "@types/debug": "4.1.13",
+    "@types/node": "24.9.2",
+    "@typescript-eslint/eslint-plugin": "8.66.0",
+    "@typescript-eslint/parser": "8.66.0",
+    "eslint": "9.39.5",
+    "eslint-plugin-import": "2.32.0",
+    "prettier": "3.9.6",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.9.3"
   },
   "overrides": {
     "braces": "^3.0.3",
