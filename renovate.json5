@@ -11,7 +11,7 @@
   "packageRules": [
     {
       "matchPackageNames": ["@types/node"],
-      "allowedVersions": "18.x"
+      "allowedVersions": "24.x"
     },
   ],
 }
