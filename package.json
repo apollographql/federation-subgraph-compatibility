@@ -48,7 +48,7 @@
     "eslint-plugin-import": "2.32.0",
     "prettier": "3.9.6",
     "ts-node": "10.9.2",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
   "overrides": {
     "braces": "^3.0.3",
